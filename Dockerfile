@@ -42,7 +42,7 @@ RUN git clone https://github.com/keeweb/keeweb-plugins.git
 FROM nginx:stable-alpine as dist
 
 # openssl is needed to create missing dh.pem
-RUN apk add --no-cache openssl bash 
+RUN apk add --no-cache openssl
 
 RUN rm -rf /etc/nginx/conf.d/* \
     && mkdir -p /etc/nginx/external

@@ -1,8 +1,8 @@
 # multistage build
-# create dbg image from builder
-# docker build --target builder -t dbg .
-# start dbg container
-# docker run --rm -it dbg bah
+# create image from builder stage
+# docker build --target builder -t keeweb_builder .
+# start container
+# docker run --rm -it keeweb_builder bash
 
 FROM node:18 as builder
 

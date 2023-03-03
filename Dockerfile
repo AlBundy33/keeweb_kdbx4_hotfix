@@ -1,3 +1,9 @@
+# multistage build
+# create dbg image from builder
+# docker build --target builder -t dbg .
+# start dbg container
+# docker run --rm -it dbg bah
+
 FROM node:18 as builder
 
 # Error: error:0308010C:digital envelope routines::unsupported

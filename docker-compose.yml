@@ -1,0 +1,22 @@
+version: '3.7'
+
+# https://github.com/keeweb/keeweb/wiki/Configuration
+# https://github.com/keeweb/keeweb/blob/master/app/scripts/const/default-app-settings.js
+# https://github.com/alexanderharm/syno-webdav-keeweb
+
+services:
+  keeweb:
+    #image: antelle/keeweb
+    # use own patched build
+    build: .
+    container_name: keeweb
+    volumes:
+      - ./certs:/etc/nginx/external/
+      - ./config.json:/keeweb/config.json
+    ports:
+      - '9080:80/tcp'
+      - '9443:443/tcp'
+    environment:
+      - KEEWEB_CONFIG_URL=config.json
+      - TZ=Europe/Berlin
+    restart: unless-stopped

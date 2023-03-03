@@ -34,8 +34,7 @@ RUN git clone https://github.com/keeweb/keeweb-plugins.git
 # build windows app
 #RUN cd keeweb \
 #    && apt update \
-#    && apt install nsis wine64 -y --no-install-recommends \
-#    && ln -s /usr/bin/wine64-stable /usr/bin/wine64 \
+#    && apt install -y --no-install-recommends nsis wine \
 #    && grunt desktop-win32 --skip-sign
 
 # https://github.com/keeweb/keeweb/blob/master/package/docker/Dockerfile

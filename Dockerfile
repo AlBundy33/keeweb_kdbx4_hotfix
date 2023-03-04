@@ -2,7 +2,7 @@
 # create image from builder stage
 # docker build --target builder -t keeweb_builder .
 # start container
-# docker run --rm -it keeweb_builder bash
+# docker run --rm -p 8085:8085 -it keeweb_builder bash
 
 FROM node:18 as builder
 
@@ -23,6 +23,7 @@ RUN git clone --branch 2.0.4 https://github.com/keeweb/kdbxweb.git \
 # build keeweb with the modified kdbxweb module
 RUN git clone --branch v1.18.7 https://github.com/keeweb/keeweb.git \
     && cd keeweb \
+    && sed "s/port: 8085\$/port: 8085,\n                host: '0.0.0.0',\n                disableHostCheck: true/g" -i Gruntfile.js \
     && npm install \
     && npm link kdbxweb \
     && npm install -g grunt \

@@ -14,9 +14,9 @@ WORKDIR /build
 
 RUN apt update \
  && apt install -y --no-install-recommends \
-    nsis \
-    vim \
-    wine
+        nsis \
+        vim \
+        wine
 
 # clone all needed repos
 RUN git clone --branch 2.0.4 https://github.com/keeweb/kdbxweb.git \
@@ -40,6 +40,8 @@ RUN cd kdbxweb \
 # because xmldom was replaced in kdbxweb after 2.0.4
 # && npm uninstall xmldom \
 # && npm install @xmldom/xmldom \
+# to build the windows app add this after the grunt command
+# && grunt desktop-win32 --skip-sign
 RUN cd keeweb \
  && sed "s/port: 8085\$/port: 8085,\n                host: '0.0.0.0',\n                disableHostCheck: true/g" -i Gruntfile.js \
  && npx browserslist@latest --update-db \
@@ -47,11 +49,9 @@ RUN cd keeweb \
  && npm link kdbxweb \
  && grunt
 
-# build windows app
-#RUN cd keeweb \
-# && apt update \
-# && apt install -y --no-install-recommends nsis wine \
-# && grunt desktop-win32 --skip-sign
+# increase DH_SIZE from 512 to 2048 - otherwise nginx will not start
+# and switch to sh instead of bash to be able to use different images
+RUN sed -i 's/DH_SIZE="512"/DH_SIZE="2048"/g' keeweb/package/docker/entrypoint.sh
 
 # https://github.com/keeweb/keeweb/blob/master/package/docker/Dockerfile
 FROM nginx:stable-alpine as dist
@@ -72,13 +72,7 @@ COPY --from=builder /build/keeweb/package/docker/entrypoint.sh /opt/entrypoint.s
 COPY --from=builder /build/keeweb/dist keeweb
 COPY --from=builder /build/keeweb-plugins/docs keeweb/plugins
 
-# increase DH_SIZE from 512 to 2048 - otherwise nginx will not start
-# and switch to sh instead of bash to be able to use different images
-RUN sed -i 's/DH_SIZE="512"/DH_SIZE="2048"/g' /opt/entrypoint.sh \
- && sed -i 's/\/bin\/bash/\/bin\/sh/g' /opt/entrypoint.sh \
- && chmod a+x /opt/entrypoint.sh
-
-ENTRYPOINT ["/opt/entrypoint.sh"]
+ENTRYPOINT ["/bin/sh", "/opt/entrypoint.sh"]
 CMD ["nginx"]
 
 EXPOSE 443

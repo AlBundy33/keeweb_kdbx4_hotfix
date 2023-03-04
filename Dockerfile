@@ -49,8 +49,7 @@ RUN cd keeweb \
  && npm link kdbxweb \
  && grunt
 
-# increase DH_SIZE from 512 to 2048 - otherwise nginx will not start
-# and switch to sh instead of bash to be able to use different images
+# increase DH_SIZE from 512 to 2048 - otherwise newer nginx will not start
 RUN sed -i 's/DH_SIZE="512"/DH_SIZE="2048"/g' keeweb/package/docker/entrypoint.sh
 
 # https://github.com/keeweb/keeweb/blob/master/package/docker/Dockerfile

@@ -19,7 +19,8 @@ RUN apt update \
         wine
 
 # clone all needed repos
-RUN git clone --branch 2.0.4 https://github.com/keeweb/kdbxweb.git \
+RUN git config --global user.email docker@local \
+ && git clone --branch 2.0.4 https://github.com/keeweb/kdbxweb.git \
  && git clone --branch v1.18.7 https://github.com/keeweb/keeweb.git \
  && git clone https://github.com/keeweb/keeweb-plugins.git
 
@@ -29,7 +30,7 @@ RUN npm install -g grunt npm-check-updates \
 
 # patch and build kdbxweb
 RUN cd kdbxweb \
- && sed 's/item\.lastModified$/item.lastModified, true/g' -i lib/format/kdbx-custom-data.ts \
+ && git fetch origin refs/pull/50/head; git cherry-pick -n FETCH_HEAD \
  && npx browserslist@latest --update-db \
  && npm install \
  && npm run build \
@@ -43,6 +44,7 @@ RUN cd kdbxweb \
 # to build the windows app add this after the grunt command
 # && grunt desktop-win32 --skip-sign
 RUN cd keeweb \
+ && git fetch origin refs/pull/2030/head; git cherry-pick -n FETCH_HEAD \
  && sed "s/port: 8085\$/port: 8085,\n                host: '0.0.0.0',\n                disableHostCheck: true/g" -i Gruntfile.js \
  && npx browserslist@latest --update-db \
  && npm install \

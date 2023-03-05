@@ -18,15 +18,15 @@ RUN apt update \
         vim \
         wine
 
-# clone all needed repos
-RUN git config --global user.email docker@local \
- && git clone --branch 2.0.4 https://github.com/keeweb/kdbxweb.git \
- && git clone --branch v1.18.7 https://github.com/keeweb/keeweb.git \
- && git clone https://github.com/keeweb/keeweb-plugins.git
-
 RUN npm install -g grunt npm-check-updates \
  && mkdir -p ~/.ssh \
- && ssh-keyscan -H github.com >> ~/.ssh/known_hosts
+ && ssh-keyscan -H github.com >> ~/.ssh/known_hosts \
+ && git config --global user.email docker@local 
+
+# clone all needed repos
+RUN git clone --branch 2.0.4 https://github.com/keeweb/kdbxweb.git \
+ && git clone --branch v1.18.7 https://github.com/keeweb/keeweb.git \
+ && git clone https://github.com/keeweb/keeweb-plugins.git
 
 # patch and build kdbxweb
 RUN cd kdbxweb \

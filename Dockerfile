@@ -14,6 +14,7 @@ WORKDIR /build
 
 RUN apt update \
  && apt install -y --no-install-recommends \
+        less \
         nsis \
         vim \
         wine
@@ -31,7 +32,6 @@ RUN git clone --branch 2.0.4 https://github.com/keeweb/kdbxweb.git \
 # patch and build kdbxweb
 RUN cd kdbxweb \
  && git fetch origin refs/pull/50/head; git cherry-pick -n FETCH_HEAD \
- && npx browserslist@latest --update-db \
  && npm install \
  && npm run build \
  && npm link
@@ -43,10 +43,10 @@ RUN cd kdbxweb \
 # && npm install @xmldom/xmldom \
 # to build the windows app add this after the grunt command
 # && grunt desktop-win32 --skip-sign
+# npm run dev does not work current - if you want to give it a try add this line to the commands
+# && sed "s/port: 8085\$/port: 8085,\n                host: '0.0.0.0',\n                disableHostCheck: true/g" -i Gruntfile.js \
 RUN cd keeweb \
  && git fetch origin refs/pull/2030/head; git cherry-pick -n FETCH_HEAD \
- && sed "s/port: 8085\$/port: 8085,\n                host: '0.0.0.0',\n                disableHostCheck: true/g" -i Gruntfile.js \
- && npx browserslist@latest --update-db \
  && npm install \
  && npm link kdbxweb \
  && grunt

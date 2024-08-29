@@ -1,5 +1,3 @@
-version: '3.7'
-
 # https://github.com/keeweb/keeweb/wiki/Configuration
 # https://github.com/keeweb/keeweb/blob/master/app/scripts/const/default-app-settings.js
 # https://github.com/alexanderharm/syno-webdav-keeweb

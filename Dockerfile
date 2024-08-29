@@ -12,7 +12,8 @@ ENV NODE_OPTIONS=--openssl-legacy-provider
 
 WORKDIR /build
 
-RUN apt update \
+RUN --mount=type=cache,target=/var/cache/apt \
+ apt update \
  && apt install -y --no-install-recommends \
         less \
         nsis \
@@ -30,7 +31,8 @@ RUN git clone --branch 2.0.4 https://github.com/keeweb/kdbxweb.git \
  && git clone https://github.com/keeweb/keeweb-plugins.git
 
 # patch and build kdbxweb
-RUN cd kdbxweb \
+RUN --mount=type=cache,target=/root/.npm \
+ cd kdbxweb \
  && git fetch origin refs/pull/50/head \
  && git cherry-pick -n FETCH_HEAD \
  && npm install \
@@ -46,7 +48,8 @@ RUN cd kdbxweb \
 # && grunt desktop-win32 --skip-sign
 # npm run dev does not work current - if you want to give it a try add this line to the commands
 # && sed "s/port: 8085\$/port: 8085,\n                host: '0.0.0.0',\n                disableHostCheck: true/g" -i Gruntfile.js \
-RUN cd keeweb \
+RUN --mount=type=cache,target=/root/.npm \
+ cd keeweb \
  && git fetch origin refs/pull/2030/head \
  && git cherry-pick -n FETCH_HEAD \
  && npm install \

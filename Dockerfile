@@ -54,7 +54,7 @@ RUN cd keeweb \
  && grunt
 
 # increase DH_SIZE - otherwise newer nginx will not start
-RUN sed -i 's/DH_SIZE="512"/DH_SIZE="1024"/g' keeweb/package/docker/entrypoint.sh
+RUN sed -i 's/DH_SIZE="512"/DH_SIZE="2048"/g' keeweb/package/docker/entrypoint.sh
 
 # https://github.com/keeweb/keeweb/blob/master/package/docker/Dockerfile
 FROM nginx:stable-alpine as dist
